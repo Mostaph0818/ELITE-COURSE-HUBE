@@ -1,10 +1,11 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   motion,
   useScroll,
   useTransform,
   useSpring,
   useInView,
+  AnimatePresence,
 } from "framer-motion";
 import {
   TrendingUp, Users, DollarSign, Headset,
@@ -76,24 +77,84 @@ function Section({
 
 /* ─── Component ─────────────────────────────────────────── */
 export default function Home() {
+  const [introVisible, setIntroVisible] = useState(true);
+  const [activeSection, setActiveSection] = useState("home");
+
   useEffect(() => {
     document.documentElement.classList.add("dark");
+    // Intro overlay fades out after mount
+    const t = setTimeout(() => setIntroVisible(false), 100);
+    return () => clearTimeout(t);
+  }, []);
+
+  // Active section tracker
+  useEffect(() => {
+    const sections = ["home", "courses", "about", "testimonials", "contact"];
+    const observers: IntersectionObserver[] = [];
+    sections.forEach((id) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const obs = new IntersectionObserver(
+        ([entry]) => { if (entry.isIntersecting) setActiveSection(id); },
+        { rootMargin: "-40% 0px -55% 0px" }
+      );
+      obs.observe(el);
+      observers.push(obs);
+    });
+    return () => observers.forEach((o) => o.disconnect());
   }, []);
 
   const heroRef = useRef(null);
-  const { scrollYProgress } = useScroll({
+  const { scrollYProgress: heroScroll } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"],
   });
-  const heroY = useTransform(scrollYProgress, [0, 1], ["0%", "25%"]);
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
-  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 1.08]);
+  const { scrollYProgress: pageProgress } = useScroll();
 
-  const smoothY = useSpring(heroY, { stiffness: 80, damping: 20 });
-  const smoothScale = useSpring(heroScale, { stiffness: 80, damping: 20 });
+  const heroY      = useTransform(heroScroll, [0, 1], ["0%", "25%"]);
+  const heroOpacity= useTransform(heroScroll, [0, 0.7], [1, 0]);
+  const heroScale  = useTransform(heroScroll, [0, 1], [1, 1.08]);
+  const smoothY    = useSpring(heroY,     { stiffness: 80, damping: 20 });
+  const smoothScale= useSpring(heroScale, { stiffness: 80, damping: 20 });
+  const progressW  = useSpring(useTransform(pageProgress, [0, 1], ["0%", "100%"]), { stiffness: 120, damping: 25 });
 
   return (
     <div className="min-h-screen bg-background text-foreground font-sans overflow-x-hidden">
+
+      {/* ── Page Intro Overlay ── */}
+      <AnimatePresence>
+        {introVisible && (
+          <motion.div
+            key="intro"
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.9, ease: [0.4, 0, 0.2, 1] }}
+            className="fixed inset-0 z-[100] bg-background flex items-center justify-center pointer-events-none"
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.7 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 1.15 }}
+              transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+              className="flex flex-col items-center gap-4"
+            >
+              <img src={logoIcon} alt="EP" className="w-16 h-16 object-contain" />
+              <motion.div
+                className="h-0.5 bg-primary rounded-full"
+                initial={{ width: 0 }}
+                animate={{ width: 120 }}
+                transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
+              />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ── Scroll Progress Bar ── */}
+      <motion.div
+        className="fixed top-0 left-0 h-0.5 bg-gradient-to-r from-primary via-green-300 to-primary z-[60] origin-left"
+        style={{ width: progressW }}
+      />
 
       {/* ── Navbar ── */}
       <motion.header
@@ -110,15 +171,27 @@ export default function Home() {
 
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-muted-foreground">
             {["home","courses","about","testimonials","contact"].map((s) => (
-              <motion.a
+              <a
                 key={s}
                 href={`#${s}`}
-                whileHover={{ color: "hsl(var(--primary))" }}
-                transition={{ duration: 0.2 }}
-                className="capitalize transition-colors"
+                className="capitalize relative py-1 transition-colors duration-200 hover:text-primary"
+                style={{ color: activeSection === s ? "hsl(var(--primary))" : undefined }}
               >
                 {s}
-              </motion.a>
+                <AnimatePresence>
+                  {activeSection === s && (
+                    <motion.span
+                      layoutId="nav-indicator"
+                      key="nav-indicator"
+                      className="absolute -bottom-0.5 left-0 right-0 h-px bg-primary rounded-full"
+                      initial={{ opacity: 0, scaleX: 0 }}
+                      animate={{ opacity: 1, scaleX: 1 }}
+                      exit={{ opacity: 0, scaleX: 0 }}
+                      transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+                    />
+                  )}
+                </AnimatePresence>
+              </a>
             ))}
           </nav>
 
