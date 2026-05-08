@@ -1,16 +1,17 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { Link } from "wouter";
 import { 
   TrendingUp, Users, DollarSign, Headset, 
-  CheckCircle2, ArrowRight, Lock, RefreshCw, 
-  ShieldCheck, BarChart3, GraduationCap, Wallet,
-  Activity, Star, ChevronRight
+  CheckCircle2, ArrowRight, RefreshCw, 
+  BarChart3, GraduationCap, Wallet,
+  Activity, Star, Lock, Infinity, Monitor, CloudUpload, Tag
 } from "lucide-react";
 import { SiTelegram, SiInstagram } from "react-icons/si";
 
 import { Button } from "@/components/ui/button";
-import logoImg from "@assets/175c4b4f-94f8-4d7a-b4e1-7d6c70bb099e_1778244939041.png";
+import logoIcon from "@assets/Untitled_design_1778245677655.png";
+import logoFull from "@assets/IMG_8204_1778245694582.png";
+import coursesPhoto from "@assets/photo_2026-05-08_13-47-44_1778244975286.jpg";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 30 },
@@ -26,28 +27,19 @@ const staggerContainer = {
 };
 
 export default function Home() {
-  // Ensure dark mode is active
   useEffect(() => {
     document.documentElement.classList.add('dark');
   }, []);
 
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-primary/30 font-sans overflow-x-hidden">
-      
+
       {/* 1. Navigation Bar */}
-      <header className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-border/50">
+      <header className="fixed top-0 w-full z-50 bg-background/90 backdrop-blur-md border-b border-border/50">
         <div className="container mx-auto px-4 h-20 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="relative w-10 h-10 bg-black flex items-center justify-center border border-primary overflow-hidden rounded">
-              {/* Optional: Use the real logo if it works better, or CSS mark */}
-              <img src={logoImg} alt="Elite Trading Pit" className="absolute inset-0 w-full h-full object-cover opacity-80 mix-blend-screen" />
-              <span className="relative z-10 font-display font-bold text-xl tracking-tighter">
-                <span className="text-primary">E</span><span className="text-secondary">P</span>
-              </span>
-            </div>
-            <span className="font-display font-bold text-xl tracking-wider hidden sm:block">
-              ELITE TRADING <span className="text-primary">PIT</span>
-            </span>
+            <img src={logoIcon} alt="EP" className="w-10 h-10 object-contain" />
+            <img src={logoFull} alt="Elite Trading Pit" className="h-10 object-contain hidden sm:block" />
           </div>
 
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-muted-foreground">
@@ -66,8 +58,40 @@ export default function Home() {
 
       {/* 2. Hero Section */}
       <section id="home" className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden flex items-center min-h-[90vh]">
-        {/* Background Grid / Pattern */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#111_1px,transparent_1px),linear-gradient(to_bottom,#111_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-20 pointer-events-none" />
+        {/* Animated Candlestick Background */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          {/* Grid */}
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#1a1a1a_1px,transparent_1px),linear-gradient(to_bottom,#1a1a1a_1px,transparent_1px)] bg-[size:60px_60px] opacity-40" />
+          {/* Glow orbs */}
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-[120px] animate-pulse" />
+          <div className="absolute bottom-1/4 right-1/4 w-72 h-72 bg-secondary/10 rounded-full blur-[100px] animate-pulse [animation-delay:1s]" />
+          {/* Animated candlesticks */}
+          <svg className="absolute bottom-0 left-0 w-full h-64 opacity-10" viewBox="0 0 1200 200" preserveAspectRatio="none">
+            {[
+              [50,30,170,10],[100,80,50,20],[150,60,140,15],[200,90,110,25],[250,40,160,10],
+              [300,70,130,20],[350,50,150,12],[400,85,115,22],[450,45,155,8],[500,65,135,18],
+              [550,35,165,10],[600,75,125,20],[650,55,145,14],[700,80,120,25],[750,42,158,9],
+              [800,68,132,16],[850,52,148,11],[900,78,122,22],[950,38,162,8],[1000,72,128,19],
+              [1050,48,152,13],[1100,82,118,24],[1150,45,155,10]
+            ].map(([x, bodyTop, bodyH, wickH], i) => (
+              <g key={i}>
+                <line x1={x} y1={bodyTop - wickH} x2={x} y2={bodyTop + bodyH + wickH} stroke={i % 2 === 0 ? "#00ff6a" : "#ff2d2d"} strokeWidth="1.5" />
+                <rect x={x - 8} y={bodyTop} width="16" height={bodyH} fill={i % 2 === 0 ? "#00ff6a" : "#ff2d2d"} />
+              </g>
+            ))}
+          </svg>
+          {/* Moving line chart overlay */}
+          <svg className="absolute bottom-0 left-0 w-full h-48 opacity-15" viewBox="0 0 1200 160" preserveAspectRatio="none">
+            <polyline
+              points="0,120 100,100 200,110 300,80 400,95 500,60 600,75 700,50 800,65 900,40 1000,55 1100,30 1200,45"
+              fill="none" stroke="#00ff6a" strokeWidth="2"
+            />
+            <polyline
+              points="0,140 100,130 200,145 300,120 400,135 500,110 600,125 700,100 800,115 900,90 1000,105 1100,80 1200,95"
+              fill="none" stroke="#ff2d2d" strokeWidth="1.5" strokeDasharray="6 3"
+            />
+          </svg>
+        </div>
         
         <div className="container mx-auto px-4 relative z-10">
           <motion.div 
@@ -123,104 +147,114 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 4. Paid Trading Courses Section (Arabic) */}
-      <section id="courses" className="py-24 bg-card/30 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary/5 to-transparent pointer-events-none" />
-        
-        <div className="container mx-auto px-4 relative z-10" dir="rtl">
-          <div className="text-center mb-16">
-            <span className="text-primary font-bold tracking-widest text-sm uppercase mb-2 block" dir="ltr">PIT TRADING ELITE</span>
-            <h2 className="font-display text-4xl md:text-5xl font-bold text-white mb-6">دورات تداول مدفوعة</h2>
-            <div className="h-1 w-20 bg-primary mx-auto rounded-full" />
-          </div>
+      {/* 4. Paid Trading Courses Section */}
+      <section id="courses" className="py-24 bg-card/20 relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-full bg-[linear-gradient(to_right,#1a1a1a_1px,transparent_1px),linear-gradient(to_bottom,#1a1a1a_1px,transparent_1px)] bg-[size:40px_40px] opacity-20 pointer-events-none" />
+        <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-primary/5 to-transparent pointer-events-none" />
 
-          {/* Courses Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16" dir="ltr">
-            {[
-              { title: "Smart Money", desc: "SMC Concepts" },
-              { title: "Price Action", desc: "Pure Chart Reading" },
-              { title: "Supply & Demand", desc: "Institutional Zones" },
-              { title: "Risk Management", desc: "Capital Preservation" }
-            ].map((course, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="bg-background border border-border/50 p-6 rounded-xl hover:border-primary/50 transition-colors group relative overflow-hidden"
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                <BookOpenIcon className="w-8 h-8 text-primary mb-4" />
-                <h3 className="font-bold text-xl mb-2">{course.title}</h3>
-                <p className="text-muted-foreground text-sm">{course.desc}</p>
-              </motion.div>
-            ))}
-          </div>
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
 
-          <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
-            {/* Key Benefits */}
-            <div className="space-y-6">
-              <h3 className="text-2xl font-bold mb-8 text-white">لماذا تختار دوراتنا؟</h3>
-              {[
-                { text: "دورات من أفضل المتداولين | محتوى احترافي ومجرب", icon: Star },
-                { text: "في قناتنا الخاصة على التلغرام | وصول كامل لكل الدورات", icon: SiTelegram },
-                { text: "تحديثات مستقبلية مستمرة | دورات جديدة بشكل دوري", icon: RefreshCw },
-                { text: "بسعر مميز جدا | اشتراك واحد = وصول كامل", icon: CheckCircle2 }
-              ].map((benefit, i) => (
-                <motion.div 
-                  key={i}
-                  initial={{ opacity: 0, x: 20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1 }}
-                  className="flex items-center gap-4 bg-background/50 border border-border/50 p-4 rounded-lg"
-                >
-                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0 ml-4">
-                    <benefit.icon className="w-5 h-5 text-primary" />
-                  </div>
-                  <p className="font-medium text-lg">{benefit.text}</p>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* What you get */}
-            <div className="bg-black border border-border p-8 rounded-2xl relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-primary/20 blur-[50px]" />
-              <h3 className="text-2xl font-bold mb-8 text-white">ماذا ستحصل؟</h3>
-              <div className="grid grid-cols-2 gap-4">
-                {[
-                  { title: "جميع الدورات", subtitle: "All Courses" },
-                  { title: "تحديثات مستمرة", subtitle: "Continuous Updates" },
-                  { title: "وصول مدى الحياة", subtitle: "Lifetime Access" },
-                  { title: "قناة خاصة وآمنة", subtitle: "Private Channel" }
-                ].map((item, i) => (
-                  <div key={i} className="bg-card border border-border p-4 rounded-lg text-center">
-                    <div className="text-primary mb-2 flex justify-center">
-                      <CheckCircle2 className="w-6 h-6" />
-                    </div>
-                    <h4 className="font-bold text-lg mb-1">{item.title}</h4>
-                    <p className="text-xs text-muted-foreground" dir="ltr">{item.subtitle}</p>
-                  </div>
-                ))}
+            {/* Left: Image */}
+            <motion.div
+              initial={{ opacity: 0, x: -40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="relative flex justify-center"
+            >
+              <div className="relative">
+                <div className="absolute -inset-4 bg-primary/10 rounded-3xl blur-2xl" />
+                <img
+                  src={coursesPhoto}
+                  alt="دورات تداول مدفوعة"
+                  className="relative rounded-2xl shadow-2xl shadow-primary/20 max-w-sm w-full object-cover border border-primary/20"
+                />
               </div>
-            </div>
-          </div>
+            </motion.div>
 
-          {/* CTA Banner */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="bg-gradient-to-r from-primary/20 via-primary/10 to-transparent border border-primary/30 p-8 rounded-2xl text-center flex flex-col md:flex-row items-center justify-between gap-6"
-          >
-            <p className="text-xl md:text-2xl font-bold text-white max-w-2xl text-right">
-              اشترك مرة واحدة وتمتع بجميع الدورات والتحديثات في قناتنا الخاصة على التلغرام
-            </p>
-            <Button size="lg" className="h-14 px-10 text-xl font-bold bg-primary hover:bg-primary/90 text-primary-foreground shrink-0 w-full md:w-auto" data-testid="button-courses-join">
-              انضم الآن
-            </Button>
-          </motion.div>
+            {/* Right: Content */}
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={staggerContainer}
+              dir="rtl"
+            >
+              {/* Title */}
+              <motion.div variants={fadeInUp} className="mb-10">
+                <p className="text-primary font-bold text-sm tracking-widest uppercase mb-2" dir="ltr">PIT TRADING ELITE</p>
+                <h2 className="font-display text-4xl md:text-5xl font-bold text-white leading-tight mb-1">
+                  دورات تداول <span className="text-primary">مدفوعة</span>
+                </h2>
+                <p className="text-muted-foreground text-lg mt-2">جميع دورات التداول في مكان واحد</p>
+                <div className="h-1 w-16 bg-primary mt-4 rounded-full" />
+              </motion.div>
+
+              {/* Benefits */}
+              <motion.div variants={staggerContainer} className="space-y-4 mb-10">
+                {[
+                  { icon: Star, title: "دورات من أفضل المتداولين", sub: "محتوى احترافي ومجرب" },
+                  { icon: SiTelegram, title: "في قناتنا الخاصة على التلغرام", sub: "وصول كامل لكل الدورات" },
+                  { icon: RefreshCw, title: "تحديثات مستقيلية مستمرة", sub: "دورات جديدة بشكل دوري" },
+                  { icon: Tag, title: "بسعر مميز جداً", sub: "اشتراك واحد = وصول كامل" },
+                ].map((b, i) => (
+                  <motion.div
+                    key={i}
+                    variants={fadeInUp}
+                    className="flex items-start gap-4 bg-background/60 border border-border/50 p-4 rounded-xl hover:border-primary/40 transition-colors"
+                  >
+                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
+                      <b.icon className="w-5 h-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="font-bold text-white">{b.title}</p>
+                      <p className="text-muted-foreground text-sm mt-0.5">{b.sub}</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </motion.div>
+
+              {/* ماذا ستحصل */}
+              <motion.div variants={fadeInUp} className="mb-8">
+                <h3 className="text-xl font-bold text-white mb-4">ماذا ستحصل؟</h3>
+                <div className="grid grid-cols-2 gap-3">
+                  {[
+                    { icon: Monitor, title: "جميع الدورات", sub: "وصول غير محدود" },
+                    { icon: CloudUpload, title: "تحديثات مستمرة", sub: "دورات جديدة إضافية" },
+                    { icon: Infinity, title: "وصول مدى الحياة", sub: "بمجرد الاشتراك" },
+                    { icon: Lock, title: "قناة خاصة وأمنة", sub: "خصوصيتك محمية" },
+                  ].map((item, i) => (
+                    <div key={i} className="bg-card border border-border p-4 rounded-xl flex flex-col items-center text-center gap-2 hover:border-primary/40 transition-colors">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                        <item.icon className="w-5 h-5 text-primary" />
+                      </div>
+                      <p className="font-bold text-sm">{item.title}</p>
+                      <p className="text-xs text-muted-foreground">{item.sub}</p>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+
+              {/* CTA */}
+              <motion.div variants={fadeInUp} className="bg-gradient-to-l from-primary/20 to-primary/5 border border-primary/30 p-6 rounded-2xl">
+                <p className="font-bold text-white text-lg mb-4 leading-relaxed">
+                  اشترك مرة واحدة وتمتع بجميع الدورات والتحديثات في قناتنا الخاصة على التلغرام
+                </p>
+                <a
+                  href="https://t.me/elite_tradingpit"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-testid="button-courses-join"
+                  className="inline-flex items-center gap-3 bg-primary hover:bg-primary/90 text-black font-bold px-8 py-4 rounded-xl text-lg transition-transform hover:scale-105"
+                >
+                  <SiTelegram className="w-5 h-5" />
+                  انضم الآن
+                </a>
+              </motion.div>
+            </motion.div>
+
+          </div>
         </div>
       </section>
 
@@ -471,14 +505,8 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-8">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-black flex items-center justify-center border border-primary rounded">
-                <span className="font-display font-bold text-sm">
-                  <span className="text-primary">E</span><span className="text-secondary">P</span>
-                </span>
-              </div>
-              <span className="font-display font-bold text-lg tracking-wider">
-                ELITE TRADING <span className="text-primary">PIT</span>
-              </span>
+              <img src={logoIcon} alt="EP" className="w-8 h-8 object-contain" />
+              <img src={logoFull} alt="Elite Trading Pit" className="h-8 object-contain" />
             </div>
             
             <nav className="flex flex-wrap justify-center gap-6 text-sm text-muted-foreground font-medium">
@@ -501,23 +529,3 @@ export default function Home() {
   );
 }
 
-// Minimal missing icons
-function BookOpenIcon(props: React.ComponentProps<"svg">) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-      <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-    </svg>
-  );
-}
