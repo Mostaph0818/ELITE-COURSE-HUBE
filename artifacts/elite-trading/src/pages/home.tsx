@@ -12,7 +12,7 @@ import {
   ArrowRight, RefreshCw,
   BarChart3, GraduationCap, Wallet,
   Activity, Star, Lock, Monitor, CloudUpload, Tag,
-  ShieldCheck, Zap, LineChart, Target, Eye, Layers,
+  ShieldCheck, Zap, LineChart, Target,
 } from "lucide-react";
 import { SiTelegram, SiInstagram } from "react-icons/si";
 
@@ -60,16 +60,60 @@ function Section({ children, className = "", id }: { children: React.ReactNode; 
 const navItems = [
   { id: "home",         label: "الرئيسية" },
   { id: "courses",      label: "الدورات" },
-  { id: "ist",          label: "IST" },
   { id: "about",        label: "من نحن" },
   { id: "testimonials", label: "آراء المتداولين" },
   { id: "contact",      label: "تواصل معنا" },
 ];
 
+/* ─── Course data with ICT + expand descriptions ─────────── */
+const COURSES = [
+  {
+    icon: LineChart,
+    title: "Smart Money",
+    sub: "تدفق المؤسسات والسيولة",
+    color: "from-primary/20 to-primary/5",
+    accent: "border-primary/40",
+    desc: "تعلّم كيف تقرأ تحركات الأموال الذكية: Order Blocks، FVG، BOS وCHoCH. ادخل السوق مع المؤسسات لا ضدها.",
+  },
+  {
+    icon: Activity,
+    title: "Price Action",
+    sub: "قراءة الشارت الخالص",
+    color: "from-secondary/20 to-secondary/5",
+    accent: "border-secondary/40",
+    desc: "تحليل الشموع اليابانية، أنماط الانعكاس، وقراءة السوق بدون مؤشرات. الأسلوب الأقدم والأثبت في التداول.",
+  },
+  {
+    icon: BarChart3,
+    title: "Supply & Demand",
+    sub: "مناطق العرض والطلب",
+    color: "from-primary/20 to-primary/5",
+    accent: "border-primary/40",
+    desc: "تحديد مناطق العرض والطلب المؤسسية بدقة، وكيفية الدخول منها مع أفضل نقاط وقف الخسارة والهدف.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Risk Management",
+    sub: "إدارة رأس المال والمخاطر",
+    color: "from-secondary/20 to-secondary/5",
+    accent: "border-secondary/40",
+    desc: "نسب المخاطرة الصحيحة، حساب حجم الصفقة، وإدارة الحساب لتبقى في السوق على المدى الطويل.",
+  },
+  {
+    icon: Target,
+    title: "ICT",
+    sub: "Inner Circle Trader",
+    color: "from-green-500/15 to-green-500/5",
+    accent: "border-green-400/40",
+    desc: "منهج ICT الكامل: Killzones، Liquidity Sweeps، NWOG/NDOG، AMD Cycles. من أعمق المناهج في تداول الفوركس والمؤشرات.",
+  },
+] as const;
+
 /* ─── Component ─────────────────────────────────────────── */
 export default function Home() {
   const [introVisible, setIntroVisible] = useState(true);
   const [activeSection, setActiveSection] = useState("home");
+  const [expandedCard, setExpandedCard] = useState<number | null>(null);
 
   useEffect(() => {
     document.documentElement.classList.add("dark");
@@ -220,7 +264,7 @@ export default function Home() {
             <motion.h1 variants={fadeUp} custom={1}
               className="font-display text-6xl md:text-8xl lg:text-[7rem] font-bold tracking-tighter leading-[0.88] uppercase mb-7"
             >
-              تداول مثل
+              TRADE LIKE
               <br />
               <motion.span
                 className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-green-300 to-primary"
@@ -313,29 +357,79 @@ export default function Home() {
             <motion.div variants={scaleIn} custom={3} className="h-px w-20 bg-gradient-to-r from-primary to-primary/0 mx-auto mt-5" />
           </div>
 
-          {/* Course Cards */}
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-20">
-            {[
-              { icon: LineChart,   title: "Smart Money",      sub: "تدفق المؤسسات والسيولة",     color: "from-primary/20 to-primary/5" },
-              { icon: Activity,    title: "Price Action",     sub: "قراءة الشارت الخالص",         color: "from-secondary/20 to-secondary/5" },
-              { icon: BarChart3,   title: "Supply & Demand",  sub: "مناطق العرض والطلب",          color: "from-primary/20 to-primary/5" },
-              { icon: ShieldCheck, title: "Risk Management",  sub: "إدارة رأس المال والمخاطر",    color: "from-secondary/20 to-secondary/5" },
-            ].map((c, i) => (
-              <motion.div key={c.title} variants={scaleIn} custom={i}
-                whileHover={{ y: -6, boxShadow: "0 20px 40px rgba(0,0,0,0.4)" }}
-                transition={{ duration: 0.25 }}
-                className="relative bg-card border border-border hover:border-primary/40 p-7 rounded-2xl overflow-hidden group cursor-default"
-              >
-                <div className={`absolute inset-0 bg-gradient-to-br ${c.color} opacity-0 group-hover:opacity-100 transition-opacity duration-400`} />
-                <motion.div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-5 relative z-10"
-                  whileHover={{ rotate: 8, scale: 1.1 }} transition={{ duration: 0.2 }}
+          {/* Course Cards — click to expand */}
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-20">
+            {COURSES.map((c, i) => {
+              const isOpen = expandedCard === i;
+              return (
+                <motion.div
+                  key={c.title}
+                  variants={scaleIn}
+                  custom={i}
+                  layout
+                  onClick={() => setExpandedCard(isOpen ? null : i)}
+                  whileHover={!isOpen ? { y: -4, boxShadow: "0 20px 40px rgba(0,0,0,0.4)" } : {}}
+                  transition={{ duration: 0.25, layout: { duration: 0.4, ease } }}
+                  className={`relative bg-card border ${isOpen ? c.accent : "border-border"} p-7 rounded-2xl overflow-hidden group cursor-pointer select-none`}
                 >
-                  <c.icon className="w-6 h-6 text-primary" />
+                  {/* hover / open gradient bg */}
+                  <div className={`absolute inset-0 bg-gradient-to-br ${c.color} transition-opacity duration-400 ${isOpen ? "opacity-100" : "opacity-0 group-hover:opacity-60"}`} />
+
+                  {/* icon + chevron row */}
+                  <div className="flex items-start justify-between relative z-10">
+                    <motion.div
+                      className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-5"
+                      animate={{ rotate: isOpen ? 12 : 0, scale: isOpen ? 1.1 : 1 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <c.icon className="w-6 h-6 text-primary" />
+                    </motion.div>
+                    <motion.div
+                      animate={{ rotate: isOpen ? 180 : 0 }}
+                      transition={{ duration: 0.35, ease }}
+                      className="text-muted-foreground mt-1"
+                    >
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </motion.div>
+                  </div>
+
+                  <h3 className="font-bold text-lg mb-1 relative z-10">{c.title}</h3>
+                  <p className="text-muted-foreground text-sm relative z-10">{c.sub}</p>
+
+                  {/* expandable description */}
+                  <AnimatePresence initial={false}>
+                    {isOpen && (
+                      <motion.div
+                        key="desc"
+                        initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                        animate={{ opacity: 1, height: "auto", marginTop: 16 }}
+                        exit={{ opacity: 0, height: 0, marginTop: 0 }}
+                        transition={{ duration: 0.4, ease }}
+                        className="overflow-hidden relative z-10"
+                      >
+                        <div className="h-px w-full bg-primary/20 mb-4" />
+                        <p className="text-foreground/80 text-sm leading-relaxed">{c.desc}</p>
+                        <motion.a
+                          href="https://t.me/elite_tradingpit"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          initial={{ opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.18, duration: 0.3 }}
+                          className="inline-flex items-center gap-2 mt-4 text-primary font-bold text-sm hover:underline"
+                        >
+                          <SiTelegram className="w-4 h-4" />
+                          احصل على الدورة في القناة
+                        </motion.a>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </motion.div>
-                <h3 className="font-bold text-lg mb-1 relative z-10">{c.title}</h3>
-                <p className="text-muted-foreground text-sm relative z-10">{c.sub}</p>
-              </motion.div>
-            ))}
+              );
+            })}
           </div>
 
           {/* Benefits */}
@@ -403,126 +497,6 @@ export default function Home() {
               </motion.div>
             </motion.div>
           </div>
-        </div>
-      </Section>
-
-      {/* ══════════════════════════════════════════════════════
-          IST STRATEGY
-      ══════════════════════════════════════════════════════ */}
-      <Section id="ist" className="py-28 relative overflow-hidden bg-card/15">
-        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
-        <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-border/40 to-transparent" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,255,106,0.04)_0%,transparent_70%)] pointer-events-none" />
-
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-3xl mx-auto text-center mb-20">
-            <motion.p variants={fadeIn} custom={0}
-              className="text-primary font-bold text-xs tracking-[0.3em] uppercase mb-4"
-            >
-              STRATEGY
-            </motion.p>
-            <motion.h2 variants={fadeUp} custom={1}
-              className="font-display text-5xl md:text-6xl font-bold text-white mb-4 tracking-tight"
-            >
-              استراتيجية{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-green-300">IST</span>
-            </motion.h2>
-            <motion.p variants={fadeUp} custom={2} className="text-muted-foreground text-lg leading-relaxed">
-              Internal Structure Trading — قراءة الهيكل الداخلي للسوق لإيجاد أفضل نقاط الدخول مع المؤسسات
-            </motion.p>
-          </div>
-
-          {/* Steps */}
-          <div className="grid md:grid-cols-3 gap-6 mb-16">
-            {[
-              {
-                step: "01",
-                icon: Eye,
-                title: "تحديد الاتجاه العام",
-                desc: "نحدد أولاً اتجاه السوق على الإطارات الكبيرة (H4 / Daily) لنتداول معه وليس ضده.",
-                color: "text-primary",
-                border: "border-primary/25",
-                glow: "bg-primary/8",
-              },
-              {
-                step: "02",
-                icon: Layers,
-                title: "البنية الداخلية",
-                desc: "ننتقل للإطارات الصغيرة (M15 / M5) لتحديد BOS / CHoCH داخل الهيكل الرئيسي.",
-                color: "text-green-300",
-                border: "border-green-300/25",
-                glow: "bg-green-300/8",
-              },
-              {
-                step: "03",
-                icon: Target,
-                title: "نقطة الدخول المثلى",
-                desc: "نستهدف FVG أو OB بعد تأكيد CHoCH مع تحديد SL فوق / تحت آخر قمة أو قاع.",
-                color: "text-secondary",
-                border: "border-secondary/25",
-                glow: "bg-secondary/8",
-              },
-            ].map((s, i) => (
-              <motion.div key={i} variants={scaleIn} custom={i}
-                whileHover={{ y: -8, boxShadow: "0 24px 48px rgba(0,0,0,0.45)" }}
-                transition={{ duration: 0.25 }}
-                className={`relative bg-card border ${s.border} rounded-2xl p-8 overflow-hidden group cursor-default`}
-              >
-                <div className={`absolute inset-0 ${s.glow} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
-                <div className={`font-display text-6xl font-bold ${s.color} opacity-15 absolute top-4 left-6 select-none`}>{s.step}</div>
-                <div className={`w-14 h-14 rounded-2xl bg-card border ${s.border} flex items-center justify-center mb-6 relative z-10`}>
-                  <s.icon className={`w-7 h-7 ${s.color}`} />
-                </div>
-                <h3 className={`font-bold text-xl mb-3 ${s.color} relative z-10`}>{s.title}</h3>
-                <p className="text-muted-foreground text-sm leading-relaxed relative z-10">{s.desc}</p>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* IST Rules List */}
-          <motion.div variants={fadeUp} custom={0}
-            className="max-w-3xl mx-auto bg-card border border-primary/20 rounded-2xl p-8 md:p-10"
-          >
-            <h3 className="font-bold text-white text-2xl mb-8 text-center">
-              قواعد الاستراتيجية — <span className="text-primary">IST Rules</span>
-            </h3>
-            <div className="grid sm:grid-cols-2 gap-4">
-              {[
-                "لا تدخل ضد الاتجاه العام (HTF Bias)",
-                "انتظر CHoCH / BOS على الإطار الصغير",
-                "الدخول فقط من FVG أو Order Block",
-                "SL دائماً خلف آخر هيكل (Swing High/Low)",
-                "نسبة المخاطرة للعائد ≥ 1:2 بدون استثناء",
-                "لا تتداول وقت النيوز الكبرى (NFP / CPI)",
-                "خذ نصف الربح عند أول هدف واترك الباقي",
-                "سجّل كل صفقاتك في مفكرة التداول",
-              ].map((rule, i) => (
-                <motion.div key={i}
-                  initial={{ opacity: 0, x: i % 2 === 0 ? -20 : 20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.08, duration: 0.5, ease }}
-                  className="flex items-start gap-3"
-                >
-                  <div className="w-6 h-6 rounded-full bg-primary/15 border border-primary/30 flex items-center justify-center shrink-0 mt-0.5">
-                    <span className="text-primary text-xs font-bold">{i + 1}</span>
-                  </div>
-                  <p className="text-foreground/85 text-sm leading-relaxed">{rule}</p>
-                </motion.div>
-              ))}
-            </div>
-
-            <div className="mt-10 text-center">
-              <motion.a href="https://t.me/elite_tradingpit" target="_blank" rel="noopener noreferrer"
-                whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(0,255,106,0.35)" }}
-                whileTap={{ scale: 0.96 }}
-                className="inline-flex items-center gap-3 bg-primary text-black font-bold px-10 py-4 rounded-xl text-lg transition-colors"
-              >
-                <SiTelegram className="w-5 h-5" />
-                تعلم IST بالتفصيل في القناة
-              </motion.a>
-            </div>
-          </motion.div>
         </div>
       </Section>
 
@@ -719,7 +693,7 @@ export default function Home() {
                 rating: 5,
               },
               {
-                quote: "كنت نخسر في كل صفقة وما فهمتش ليه. بعد ما تعلمت استراتيجية IST في القناة بدأت نربح بالزبط. جاد هذا مو كلام فاضي.",
+                quote: "كنت نخسر في كل صفقة وما فهمتش ليه. بعد ما تعلمت ICT في القناة بدأت نربح بالزبط. جاد هذا مو كلام فاضي.",
                 author: "ياسين ب.",
                 city: "وهران",
                 rating: 5,
