@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Elite Trading Pit"
+version = "1.0.0"
+id = "artifacts/elite-trading"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 22247
+
+[services.development]
+run = "pnpm --filter @workspace/elite-trading run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/elite-trading", "run", "build" ]
+publicDir = "artifacts/elite-trading/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "22247"
+BASE_PATH = "/"
