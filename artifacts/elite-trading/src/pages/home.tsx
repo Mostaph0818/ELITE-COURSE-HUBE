@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import logoIcon from "@assets/Untitled_design_1778245677655.png";
 import logoFull from "@assets/IMG_8204_1778245694582.png";
 import coursesPhoto from "@assets/photo_2026-05-08_13-47-44_1778244975286.jpg";
+import heroBg from "@assets/ChatGPT_Image_May_8,_2026,_02_31_56_PM_1778247241504.png";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 30 },
@@ -43,11 +44,11 @@ export default function Home() {
           </div>
 
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-muted-foreground">
-            <a href="#home" className="hover:text-primary transition-colors">Home</a>
-            <a href="#about" className="hover:text-primary transition-colors">About</a>
-            <a href="#services" className="hover:text-primary transition-colors">Services</a>
-            <a href="#testimonials" className="hover:text-primary transition-colors">Testimonials</a>
-            <a href="#contact" className="hover:text-primary transition-colors">Contact</a>
+            <a href="#home" className="hover:text-primary transition-colors duration-200">Home</a>
+            <a href="#courses" className="hover:text-primary transition-colors duration-200">Courses</a>
+            <a href="#about" className="hover:text-primary transition-colors duration-200">About</a>
+            <a href="#testimonials" className="hover:text-primary transition-colors duration-200">Testimonials</a>
+            <a href="#contact" className="hover:text-primary transition-colors duration-200">Contact</a>
           </nav>
 
           <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground font-semibold" data-testid="button-nav-join">
@@ -57,90 +58,121 @@ export default function Home() {
       </header>
 
       {/* 2. Hero Section */}
-      <section id="home" className="relative pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden flex items-center min-h-[90vh]">
-        {/* Animated Candlestick Background */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          {/* Grid */}
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#1a1a1a_1px,transparent_1px),linear-gradient(to_bottom,#1a1a1a_1px,transparent_1px)] bg-[size:60px_60px] opacity-40" />
-          {/* Glow orbs */}
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-[120px] animate-pulse" />
-          <div className="absolute bottom-1/4 right-1/4 w-72 h-72 bg-secondary/10 rounded-full blur-[100px] animate-pulse [animation-delay:1s]" />
-          {/* Animated candlesticks */}
-          <svg className="absolute bottom-0 left-0 w-full h-64 opacity-10" viewBox="0 0 1200 200" preserveAspectRatio="none">
-            {[
-              [50,30,170,10],[100,80,50,20],[150,60,140,15],[200,90,110,25],[250,40,160,10],
-              [300,70,130,20],[350,50,150,12],[400,85,115,22],[450,45,155,8],[500,65,135,18],
-              [550,35,165,10],[600,75,125,20],[650,55,145,14],[700,80,120,25],[750,42,158,9],
-              [800,68,132,16],[850,52,148,11],[900,78,122,22],[950,38,162,8],[1000,72,128,19],
-              [1050,48,152,13],[1100,82,118,24],[1150,45,155,10]
-            ].map(([x, bodyTop, bodyH, wickH], i) => (
-              <g key={i}>
-                <line x1={x} y1={bodyTop - wickH} x2={x} y2={bodyTop + bodyH + wickH} stroke={i % 2 === 0 ? "#00ff6a" : "#ff2d2d"} strokeWidth="1.5" />
-                <rect x={x - 8} y={bodyTop} width="16" height={bodyH} fill={i % 2 === 0 ? "#00ff6a" : "#ff2d2d"} />
-              </g>
-            ))}
-          </svg>
-          {/* Moving line chart overlay */}
-          <svg className="absolute bottom-0 left-0 w-full h-48 opacity-15" viewBox="0 0 1200 160" preserveAspectRatio="none">
-            <polyline
-              points="0,120 100,100 200,110 300,80 400,95 500,60 600,75 700,50 800,65 900,40 1000,55 1100,30 1200,45"
-              fill="none" stroke="#00ff6a" strokeWidth="2"
-            />
-            <polyline
-              points="0,140 100,130 200,145 300,120 400,135 500,110 600,125 700,100 800,115 900,90 1000,105 1100,80 1200,95"
-              fill="none" stroke="#ff2d2d" strokeWidth="1.5" strokeDasharray="6 3"
-            />
-          </svg>
-        </div>
-        
-        <div className="container mx-auto px-4 relative z-10">
-          <motion.div 
+      <section id="home" className="relative overflow-hidden flex items-center min-h-screen">
+        {/* Chart image background with ken-burns zoom animation */}
+        <motion.div
+          className="absolute inset-0"
+          initial={{ scale: 1.08 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 8, ease: "easeOut" }}
+        >
+          <img
+            src={heroBg}
+            alt="Trading Chart"
+            className="w-full h-full object-cover"
+          />
+        </motion.div>
+
+        {/* Dark overlay layers */}
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/75 to-background/40" />
+        <div className="absolute inset-0 bg-gradient-to-r from-background/60 via-transparent to-background/60" />
+
+        {/* Pulsing green glow bottom */}
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3/4 h-40 bg-primary/15 blur-[80px] animate-pulse" />
+
+        {/* Floating scan line */}
+        <motion.div
+          className="absolute left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent pointer-events-none"
+          initial={{ top: "100%" }}
+          animate={{ top: "0%" }}
+          transition={{ duration: 6, repeat: Infinity, ease: "linear", repeatDelay: 2 }}
+        />
+
+        <div className="container mx-auto px-4 relative z-10 pt-32 pb-24 md:pt-48 md:pb-32">
+          <motion.div
             initial="hidden"
             animate="visible"
             variants={staggerContainer}
             className="max-w-4xl mx-auto text-center flex flex-col items-center"
           >
-            <motion.h1 variants={fadeInUp} className="font-display text-6xl md:text-8xl lg:text-9xl font-bold tracking-tighter leading-[0.9] uppercase mb-6">
-              TRADE LIKE <br/>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-green-300 drop-shadow-[0_0_25px_rgba(0,255,106,0.3)]">ELITE</span>
+            {/* Label badge */}
+            <motion.div
+              variants={fadeInUp}
+              className="inline-flex items-center gap-2 bg-primary/10 border border-primary/30 text-primary text-sm font-bold px-4 py-2 rounded-full mb-8 backdrop-blur-sm"
+            >
+              <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+              ELITE TRADING PIT
+            </motion.div>
+
+            <motion.h1
+              variants={fadeInUp}
+              className="font-display text-6xl md:text-8xl lg:text-[7rem] font-bold tracking-tighter leading-[0.9] uppercase mb-6"
+            >
+              TRADE LIKE <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-green-300 to-primary drop-shadow-[0_0_40px_rgba(0,255,106,0.5)]">
+                ELITE
+              </span>
             </motion.h1>
-            
-            <motion.p variants={fadeInUp} className="text-lg md:text-2xl text-muted-foreground max-w-2xl mb-10 font-light">
+
+            <motion.p
+              variants={fadeInUp}
+              className="text-lg md:text-xl text-white/70 max-w-2xl mb-10 font-light leading-relaxed"
+            >
               Professional trading signals, mentorship and funding to elevate your trading journey.
             </motion.p>
-            
-            <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-              <Button size="lg" className="h-14 px-8 text-lg font-bold bg-primary hover:bg-primary/90 text-primary-foreground shadow-[0_0_20px_rgba(0,255,106,0.3)]" data-testid="button-hero-start">
+
+            <motion.div
+              variants={fadeInUp}
+              className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto"
+            >
+              <a
+                href="https://t.me/elite_tradingpit"
+                target="_blank"
+                rel="noopener noreferrer"
+                data-testid="button-hero-start"
+                className="inline-flex items-center justify-center gap-2 h-14 px-10 text-lg font-bold bg-primary hover:bg-primary/90 text-black rounded-xl shadow-[0_0_30px_rgba(0,255,106,0.4)] hover:shadow-[0_0_50px_rgba(0,255,106,0.6)] transition-all duration-300 hover:scale-105"
+              >
+                <SiTelegram className="w-5 h-5" />
                 Get Started
-              </Button>
-              <Button size="lg" variant="outline" className="h-14 px-8 text-lg font-bold border-border hover:bg-white/5" data-testid="button-hero-learn">
+              </a>
+              <a
+                href="#courses"
+                data-testid="button-hero-learn"
+                className="inline-flex items-center justify-center h-14 px-10 text-lg font-bold border border-white/20 hover:border-primary/50 text-white hover:bg-white/5 rounded-xl backdrop-blur-sm transition-all duration-300"
+              >
                 Learn More
-              </Button>
+              </a>
             </motion.div>
           </motion.div>
         </div>
+
+        {/* Bottom gradient fade into next section */}
+        <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-background to-transparent pointer-events-none" />
       </section>
 
       {/* 3. Stats Bar */}
-      <section className="border-y border-border/50 bg-black/50 backdrop-blur">
-        <div className="container mx-auto px-4 py-12">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 divide-x-0 md:divide-x divide-border/50">
+      <section className="relative border-y border-border/40 bg-black/70 backdrop-blur-xl overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-secondary/5 pointer-events-none" />
+        <div className="container mx-auto px-4 py-10">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-0">
             {[
-              { label: "+92% Win Rate", icon: TrendingUp, color: "text-primary" },
-              { label: "500+ Traders", icon: Users, color: "text-secondary" },
-              { label: "$2M+ Volume", icon: DollarSign, color: "text-primary" },
-              { label: "24/7 Support", icon: Headset, color: "text-secondary" }
+              { value: "+92%", label: "Win Rate", icon: TrendingUp, color: "text-primary" },
+              { value: "500+", label: "Traders", icon: Users, color: "text-secondary" },
+              { value: "$2M+", label: "Volume", icon: DollarSign, color: "text-primary" },
+              { value: "24/7", label: "Support", icon: Headset, color: "text-secondary" }
             ].map((stat, i) => (
-              <motion.div 
+              <motion.div
                 key={i}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="flex flex-col items-center justify-center text-center px-4"
+                transition={{ delay: i * 0.12, duration: 0.5 }}
+                whileHover={{ scale: 1.05 }}
+                className="flex flex-col items-center justify-center text-center px-6 py-8 border-r border-border/30 last:border-r-0"
               >
-                <stat.icon className={`w-8 h-8 mb-4 ${stat.color} opacity-80`} />
-                <h3 className="font-display text-2xl md:text-3xl font-bold tracking-tight">{stat.label}</h3>
+                <stat.icon className={`w-7 h-7 mb-3 ${stat.color}`} />
+                <span className={`font-display text-3xl md:text-4xl font-bold tracking-tight ${stat.color}`}>{stat.value}</span>
+                <span className="text-sm text-muted-foreground font-medium mt-1 uppercase tracking-widest">{stat.label}</span>
               </motion.div>
             ))}
           </div>
@@ -295,62 +327,6 @@ export default function Home() {
                 <BarChart3 className="w-24 h-24 text-white opacity-80" />
               </div>
             </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* 6. Services Section */}
-      <section id="services" className="py-24 bg-card/30 border-y border-border/50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <span className="text-primary font-bold tracking-widest text-sm uppercase mb-4 block">OUR SERVICES</span>
-            <h2 className="font-display text-4xl md:text-5xl font-bold">WHAT WE OFFER</h2>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                title: "SIGNALS",
-                desc: "High quality trading signals delivered in real-time with high accuracy.",
-                icon: Activity,
-                features: ["Real-time Alerts", "Entry & Exit Levels", "Risk Management", "24/7 Support"]
-              },
-              {
-                title: "MENTORSHIP",
-                desc: "Learn from experienced traders and improve your skills.",
-                icon: GraduationCap,
-                features: ["Live Sessions", "Trading Strategies", "Mindset & Psychology", "Private Community"]
-              },
-              {
-                title: "FUNDING",
-                desc: "Get funded and trade with our capital. Keep up to 80% of the profits.",
-                icon: Wallet,
-                features: ["Up to $200K Funding", "Profit Split up to 80%", "No Personal Risk", "Fast Payouts"]
-              }
-            ].map((service, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.2 }}
-                className="bg-background border border-border p-8 rounded-2xl hover:border-primary/50 transition-all duration-300 hover:shadow-[0_0_30px_rgba(0,255,106,0.1)] group"
-              >
-                <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                  <service.icon className="w-7 h-7 text-primary" />
-                </div>
-                <h3 className="text-2xl font-bold mb-4">{service.title}</h3>
-                <p className="text-muted-foreground mb-8 min-h-[60px]">{service.desc}</p>
-                <ul className="space-y-3">
-                  {service.features.map((feature, j) => (
-                    <li key={j} className="flex items-center text-sm font-medium text-foreground/80">
-                      <CheckCircle2 className="w-4 h-4 text-primary mr-3 shrink-0" />
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-              </motion.div>
-            ))}
           </div>
         </div>
       </section>
